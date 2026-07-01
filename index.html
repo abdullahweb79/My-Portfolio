@@ -139,14 +139,64 @@ nav{max-width:var(--max);margin:0 auto;padding:0 32px;height:68px;display:flex;a
 .navlinks li a.active::after{transform:scaleX(1);}
 .nav-right{display:flex;align-items:center;gap:14px;}
 
-.hamburger{display:none;flex-direction:column;gap:5px;width:22px;}
-.hamburger span{height:2px;background:var(--ink);border-radius:2px;}
-.mobile-panel{
-  display:none;position:fixed;inset:68px 0 0 0;background:var(--bg);z-index:400;
-  padding:32px;flex-direction:column;gap:6px;border-top:1px solid var(--border);
+.hamburger{
+  display:none;flex-direction:column;justify-content:center;align-items:center;
+  width:38px;height:38px;gap:5px;border-radius:9px;flex-shrink:0;
+  transition:background .18s;
 }
-.mobile-panel.open{display:flex;}
-.mobile-panel a{font-family:var(--f-head);font-size:1.3rem;padding:14px 4px;border-bottom:1px solid var(--border);}
+.hamburger:hover{background:var(--primary-tint);}
+.hamburger span{
+  height:2px;width:19px;background:var(--ink);border-radius:2px;
+}
+
+.mobile-panel{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  visibility:hidden;opacity:0;
+  transition:opacity .28s var(--ease), visibility .28s var(--ease);
+  overflow-y:auto;
+}
+.mobile-panel.open{visibility:visible;opacity:1;}
+.mobile-panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  height:68px;padding:0 20px;flex-shrink:0;border-bottom:1px solid var(--border);
+}
+.mobile-panel-close{
+  width:38px;height:38px;border-radius:9px;border:none;background:transparent;
+  display:flex;align-items:center;justify-content:center;color:var(--ink);
+  transition:background .18s;
+}
+.mobile-panel-close:hover{background:var(--primary-tint);}
+.mobile-panel-close svg{width:20px;height:20px;}
+.mobile-panel-links{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:8px 28px 60px;gap:2px;
+}
+.mobile-panel a{
+  font-family:var(--f-head);font-size:1.35rem;font-weight:600;
+  padding:17px 6px;border-bottom:1px solid var(--border);color:var(--ink);
+  display:flex;align-items:center;justify-content:space-between;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .35s var(--ease), transform .35s var(--ease), color .18s;
+}
+.mobile-panel.open a{opacity:1;transform:translateY(0);}
+.mobile-panel.open a:nth-child(1){transition-delay:.06s;}
+.mobile-panel.open a:nth-child(2){transition-delay:.1s;}
+.mobile-panel.open a:nth-child(3){transition-delay:.14s;}
+.mobile-panel.open a:nth-child(4){transition-delay:.18s;}
+.mobile-panel.open a:nth-child(5){transition-delay:.22s;}
+.mobile-panel.open a:nth-child(6){transition-delay:.26s;}
+.mobile-panel a::after{content:'→';color:var(--ink-faint);font-family:var(--f-body);font-weight:400;transition:transform .18s var(--ease), color .18s;}
+.mobile-panel a:hover,.mobile-panel a:active,.mobile-panel a.active{color:var(--primary);}
+.mobile-panel a:hover::after,.mobile-panel a:active::after,.mobile-panel a.active::after{color:var(--primary);transform:translateX(3px);}
+.mobile-panel a.mobile-contact{
+  margin-top:18px;border-bottom:none;background:var(--primary);color:#fff;
+  border-radius:var(--radius-sm);padding:15px 18px;font-size:1.05rem;
+}
+.mobile-panel a.mobile-contact::after{content:'';}
+.mobile-panel a.mobile-contact:hover{color:#fff;}
+body.nav-open{overflow:hidden;}
 
 /* ============================================================
    HERO
@@ -164,14 +214,7 @@ nav{max-width:var(--max);margin:0 auto;padding:0 32px;height:68px;display:flex;a
 #hero .hero-inner{
   -webkit-mask-image:none;mask-image:none;
 }
-.hero-grid{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;margin-bottom:32px;}
-.avatar{
-  width:84px;height:84px;border-radius:50%;
-  background:linear-gradient(150deg,var(--primary),var(--accent));
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--f-head);font-weight:700;font-size:1.6rem;color:#fff;
-  border:4px solid var(--card);box-shadow:var(--shadow-md);
-}
+.hero-top{margin-bottom:32px;}
 .status-pill{
   display:inline-flex;align-items:center;gap:7px;
   font-family:var(--f-mono);font-size:0.78rem;color:var(--success);
@@ -206,7 +249,6 @@ h1.hero-name .accent-text{
 .profile-card{
   padding:28px;position:sticky;top:96px;height:fit-content;
 }
-.profile-card .avatar{width:64px;height:64px;font-size:1.25rem;margin-bottom:16px;}
 .profile-card h3{font-size:1.1rem;margin-bottom:2px;}
 .profile-card .role{font-size:0.88rem;color:var(--ink-soft);margin-bottom:18px;}
 .profile-facts{border-top:1px solid var(--border);padding-top:16px;}
@@ -267,6 +309,11 @@ h1.hero-name .accent-text{
   transition:transform .5s var(--ease);
 }
 .project:hover .mock-screen{transform:scale(1.015);}
+.project-img{
+  width:100%;aspect-ratio:16/10;object-fit:cover;
+  display:block;transition:transform .5s var(--ease);
+}
+.project:hover .project-img{transform:scale(1.015);}
 .mock-bar{height:9px;border-radius:5px;}
 .mock-block{border-radius:8px;flex:1;}
 .mock-row{display:flex;gap:10px;flex:1;}
@@ -383,6 +430,7 @@ footer{padding:44px 0;}
 @media (max-width:920px){
   .navlinks{display:none;}
   .hamburger{display:flex;}
+  .nav-right .btn-primary{display:none;}
   .about-layout{grid-template-columns:1fr;}
   .profile-card{position:static;}
   .project{grid-template-columns:1fr;gap:28px;}
@@ -395,7 +443,7 @@ footer{padding:44px 0;}
   .wrap,nav{padding:0 20px;}
   section{padding:80px 0;}
   #hero{padding-top:56px;}
-  .hero-grid{grid-template-columns:1fr;gap:16px;text-align:left;}
+  .hero-top{margin-bottom:24px;}
   .mini-stats{grid-template-columns:repeat(2,1fr);}
   .form-row{grid-template-columns:1fr;}
   .contact-cards{grid-template-columns:1fr;}
@@ -407,7 +455,7 @@ footer{padding:44px 0;}
 
 <header>
   <nav>
-    <a href="#hero" class="logo"><span class="logo-mark">MA</span>Abdullah</a>
+    <a href="#hero" >Muhammad Abdullah</a>
     <ul class="navlinks" id="navlinks">
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -421,23 +469,28 @@ footer{padding:44px 0;}
     </div>
   </nav>
   <div class="mobile-panel" id="mobilePanel">
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#experience">Experience</a>
-    <a href="#achievements">Achievements</a>
-    <a href="#contact">Contact</a>
+    <div class="mobile-panel-head">
+      </span>Muhammad Abdullah</span>
+      <button class="mobile-panel-close" id="mobileClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="mobile-panel-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#achievements">Achievements</a>
+      <a href="#contact" class="mobile-contact">Get in Touch</a>
+    </div>
   </div>
 </header>
 
 <!-- ============ HERO ============ -->
 <section id="hero">
   <div class="wrap hero-inner">
-    <div class="hero-grid">
-      <div class="avatar" role="img" aria-label="Muhammad Abdullah profile photo placeholder">MA</div>
-      <div>
-        <span class="status-pill"><span class="status-dot"></span>Available for Hire</span>
-      </div>
+    <div class="hero-top">
+      <span class="status-pill"><span class="status-dot"></span>Available for Hire</span>
     </div>
 
     <h1 class="hero-name">Muhammad Abdullah,<br><span class="accent-text">Full Stack Developer</span></h1>
@@ -479,7 +532,6 @@ footer{padding:44px 0;}
 
     <div class="about-layout">
       <div class="card profile-card reveal">
-        <div class="avatar">MA</div>
         <h3>Muhammad Abdullah</h3>
         <div class="role">Full Stack Developer</div>
         <dl class="profile-facts">
@@ -863,10 +915,9 @@ footer{padding:44px 0;}
           <div class="contact-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1s-.7 1-.9 1.1c-.2.2-.3.2-.6.1a8 8 0 0 1-4-3.5c-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.2 3.4 5.4 4.7 2 .8 2.7.7 3.2.6.5-.1 1.8-.7 2-1.4.2-.7.2-1.3.1-1.4-.1-.1-.3-.2-.5-.3z"/><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
           <div><div class="label">WhatsApp</div><div class="value">+92 321 593 2657</div></div>
         </a>
-        <a href="Muhammad_Abdullah_Resume.pdf" target="_blank" class="card contact-card" style="grid-column:1/-1;">
+        <a href="Abdullah_FullStack_Dev_Res.pdf" target="_blank" class="card contact-card" style="grid-column:1/-1;">
           <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6M9 15l3 3 3-3"/></svg></div>
-          <div>>      <a href="Abdullah_FullStack_Dev_Res.pdf" target="_blank" class="btn btn-secondary">Download Résumé</a>
-</div>
+          <div><div class="label">Résumé</div><div class="value">Download PDF</div></div>
         </a>
       </div>
 
@@ -913,17 +964,27 @@ footer{padding:44px 0;}
   // Mobile nav
   var hamburger = document.getElementById('hamburger');
   var mobilePanel = document.getElementById('mobilePanel');
-  hamburger.addEventListener('click', function(){
-    var open = mobilePanel.classList.toggle('open');
+  var mobileClose = document.getElementById('mobileClose');
+  function setNavOpen(open){
+    mobilePanel.classList.toggle('open', open);
     hamburger.setAttribute('aria-expanded', open);
+    document.body.classList.toggle('nav-open', open);
+  }
+  hamburger.addEventListener('click', function(){ setNavOpen(true); });
+  mobileClose.addEventListener('click', function(){ setNavOpen(false); });
+  document.querySelectorAll('.mobile-panel-links a').forEach(function(a){
+    a.addEventListener('click', function(){ setNavOpen(false); });
   });
-  document.querySelectorAll('.mobile-panel a').forEach(function(a){
-    a.addEventListener('click', function(){ mobilePanel.classList.remove('open'); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') setNavOpen(false);
+  });
+  window.addEventListener('resize', function(){
+    if (window.innerWidth > 920) setNavOpen(false);
   });
 
   // Active section indicator
   var sections = document.querySelectorAll('section[id]');
-  var navA = document.querySelectorAll('.navlinks a');
+  var navA = document.querySelectorAll('.navlinks a, .mobile-panel-links a:not(.mobile-contact)');
   window.addEventListener('scroll', function(){
     var current = '';
     sections.forEach(function(s){ if (window.scrollY >= s.offsetTop - 120) current = s.id; });
